@@ -1,0 +1,116 @@
+.fon {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.App {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  border: 1px solid rgb(0 71 139);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.square__item {
+  border: 1px solid rgb(0 71 139);
+  position: relative;
+  cursor: pointer;
+
+  p {
+    font-size: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+}
+
+.square__success_line {
+  position: absolute;
+  width: 95%;
+  height: 3px;
+  background-color: red;
+  display: none;
+}
+
+.joined {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #018721;
+  font-weight: 500;
+  strong {
+    color: rgb(153, 0, 0);
+    font-weight: bold;
+  }
+}
+//////////////////////////// Vertical
+.square__success_vertical1 {
+  transform: rotate(90deg) translateX(52%) translateY(122px);
+  display: block;
+}
+.square__success_vertical2 {
+  transform: rotate(90deg) translateX(52%) translateY(-9px);
+  display: block;
+}
+.square__success_vertical3 {
+  transform: rotate(90deg) translateX(52%) translateY(-142px);
+  display: block;
+}
+//////////////////////////// Horizontal
+.square__success_horizontal1 {
+  top: 17%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+.square__success_horizontal2 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+.square__success_horizontal3 {
+  top: 83.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+
+///////////////////////// Diagonal
+
+.square__success_diagonal1 {
+  width: 120%;
+  display: block;
+  transform: rotate(45deg) translate(108px) translateY(169px);
+}
+.square__success_diagonal2 {
+  width: 120%;
+  display: block;
+  transform: rotate(-45deg) translate(-169px) translateY(111px);
+}
+
+@media (max-width: 468px) {
+  .App {
+    width: 100%;
+  }
+  .square__success_diagonal2 {
+    transform: rotate(-44deg) translate(-175px) translateY(113px);
+  }
+}
+@media (max-width: 375px) {
+  .square__success_diagonal2 {
+    transform: rotate(-47deg) translate(-175px) translateY(107px);
+  }
+  .square__success_diagonal1 {
+    transform: rotate(47deg) translate(119px) translateY(163px);
+  }
+}
