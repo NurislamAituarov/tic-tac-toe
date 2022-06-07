@@ -6,7 +6,8 @@
 
 .wrapper__popUp {
   padding: 100px;
-  background-image: url('../../images/fon2.jpg');
+  background-image: url('../../images/tekstura-fon-odnotonnye-oboi.jpg');
+  background-position: center center;
   .subtitle {
     text-align: center;
     color: black;
@@ -22,8 +23,10 @@
   align-items: end;
   height: max-content;
   padding: 20px;
+  box-sizing: border-box;
   input {
-    padding: 10px 20px;
+    box-sizing: border-box;
+    padding: 20px;
   }
   button {
     padding: 10px 20px;

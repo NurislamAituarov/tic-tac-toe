@@ -9,6 +9,7 @@ import StagesModal from '../Winner/StagesModal';
 import TemporaryDrawer from '../popUp';
 import fon from '../../images/fon.jpg';
 import { Button } from '@mui/material';
+import CustomizedNotification from '../CustomNotification';
 
 const successFullArr = [
   [0, 1, 2],
@@ -37,11 +38,12 @@ export function Squares() {
   const [joined, setJoined] = useState(true);
   const [openWinner, setOpenWinner] = useState(false);
   const [draw, setDraw] = useState(false);
+  const [notification, setNotification] = useState('');
 
   const params = useParams();
   const dispatch = useDispatch();
 
-  // При нажатии на квадрат вызывает функцию
+  // При нажатии на квадрат, приходит от сервера индекс квадрата
   useEffect(() => {
     if (playIndex !== null) {
       addValue(playIndex);
@@ -93,7 +95,9 @@ export function Squares() {
   function isWinner() {
     let s = state.count % 2 === 0 ? 'X' : 'O';
 
-    successFullArr.forEach((el, i) => {
+    for (let i = 0; i < successFullArr.length; i++) {
+      let el = successFullArr[i];
+
       if (state.squares[el[0]] === s && state.squares[el[1]] === s && state.squares[el[2]] === s) {
         setOpenWinner(true);
         setIndexArr(i);
@@ -101,18 +105,25 @@ export function Squares() {
           setState({ squares: Array(9).fill(null) });
           setState((state) => ({ ...state, count: 0, notTea: false }));
           setIndexArr(null);
-        }, 2000);
-      } else {
-        if (state.count === 8) {
-          setState((state) => ({
-            ...state,
-            squares: Array(9).fill(null),
-            count: 0,
-          }));
-          setDraw(true);
-          setIndexArr(null);
-        }
+          setOpenWinner(false);
+        }, 1000);
+        break;
       }
+    }
+
+    successFullArr.forEach((el, i) => {
+      // if (state.squares[el[0]] === s && state.squares[el[1]] === s && state.squares[el[2]] === s) {
+      //   console.log('winner');
+      //   setOpenWinner(true);
+      //   setIndexArr(i);
+      //   setTimeout(() => {
+      //     setState({ squares: Array(9).fill(null) });
+      //     setState((state) => ({ ...state, count: 0, notTea: false }));
+      //     setIndexArr(null);
+      //   }, 2000);
+      // } else {
+      //   state.count === 8 && console.log('ничья');
+      // }
     });
   }
 
@@ -121,23 +132,39 @@ export function Squares() {
     if (state.squares[index] === null && state.count !== 9) {
       state.squares[index] = state.count % 2 === 0 ? 'X' : 'O';
       setState((state) => ({ ...state, count: state.count + 1 }));
+      isWinner();
     } else {
       alert('Эта ячейка занята, выберите другую');
     }
-
-    isWinner();
   }
 
   // Функция отправляющая сообщения на сервер
   function onIndexSocket(index) {
-    socket.send(
-      JSON.stringify({
-        method: 'draw',
-        id: params.id,
-        username: valueUserName,
-        playIndex: index,
-      }),
-    );
+    if (state.squares[index] === null && state.username !== valueUserName) {
+      setNotification(false);
+      socket.send(
+        JSON.stringify({
+          method: 'draw',
+          id: params.id,
+          username: valueUserName,
+          playIndex: index,
+        }),
+      );
+    } else if (state.squares[index] !== null) {
+      setNotification('busy');
+    } else {
+      setNotification('not your move');
+    }
+  }
+
+  if (state.count === 9 && !openWinner) {
+    setState((state) => ({
+      ...state,
+      squares: Array(9).fill(null),
+      count: 0,
+    }));
+    setDraw(true);
+    setIndexArr(null);
   }
 
   return (
@@ -170,7 +197,7 @@ export function Squares() {
       </div>
       <TemporaryDrawer />
 
-      {connectedUser && (
+      {connectedUser.length > 0 && (
         <StagesModal
           open={joined}
           setOpen={setJoined}
@@ -180,6 +207,9 @@ export function Squares() {
       )}
       {draw && <StagesModal open={draw} setOpen={setDraw} user="draw" />}
       {openWinner && <StagesModal open={openWinner} setOpen={setOpenWinner} user={winUser} />}
+      {notification && (
+        <CustomizedNotification notification={notification} setNotification={setNotification} />
+      )}
     </>
   );
 }
